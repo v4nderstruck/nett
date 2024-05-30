@@ -1,0 +1,35 @@
+name: s2s
+topology:
+  nodes:
+    vpn1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.0.0
+      binds:
+        - router1/daemons:/etc/frr/daemons
+        - router1/frr.conf:/etc/frr/frr.conf
+    vpn2:
+      kind: linux
+      image: quay.io/frrouting/frr:10.0.0
+      binds:
+        - router2/daemons:/etc/frr/daemons
+        - router2/frr.conf:/etc/frr/frr.conf
+
+    PC1_VN1001:
+      kind: linux
+      image: praqma/network-multitool:latest
+    PC2_VN1002:
+      kind: linux
+      image: praqma/network-multitool:latest
+    PC3_VN2001:
+      kind: linux
+      image: praqma/network-multitool:latest
+    PC4_VN2002:
+      kind: linux
+      image: praqma/network-multitool:latest
+
+  links:
+    - endpoints: ["vpn1:eth1", "vpn2:eth1"]
+    - endpoints: ["PC1_VN1001:eth1", "vpn1:eth2"]
+    - endpoints: ["PC2_VN1002:eth1", "vpn1:eth3"]
+    - endpoints: ["PC3_VN2001:eth1", "vpn2:eth2"]
+    - endpoints: ["PC4_VN2002:eth1", "vpn2:eth3"]
